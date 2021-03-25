@@ -136,7 +136,6 @@ func (r *UserRepository) Update(u *model.User) (error){
 		union all
 		select '',coalesce(sum(amount),0),' ', 'Итого',''
 		from operations where cast(operation_date as date)=cast(current_timestamp as date); `
-		//and user_id=$1
 		var trns [] model.Operation
 		rows,err := r.store.db.Query(sqlStatement,userid)
 			if err != nil {
@@ -158,5 +157,33 @@ func (r *UserRepository) Update(u *model.User) (error){
 			return trns, err
 		}
 
+//Get balance, limits,cashflow,etc..
+		func (r *UserRepository) GetUserData(userid int) (*model.UserData, error){
+			ud := new(model.UserData)
+			sqlStatement := `select income,outcome,income-outcome, case when income-outcome>0 then 1 else 0 end flag from
+			(
+			select sum(amount) income,(select sum(amount) from operations 
+			where user_id=$1 and date_trunc('month',operation_date)=date_trunc('month',current_timestamp) and direction=2) outcome
+			from operations where user_id=1 and date_trunc('month',operation_date)=date_trunc('month',current_timestamp) and direction=1
+			)t;`
+			
+			rows,err := r.store.db.Query(sqlStatement,userid)
+				if err != nil {
+					log.Fatal(err)
+				}
+				defer rows.Close()
+				for rows.Next() {
+					//ud := new(model.UserData)
+					err := rows.Scan(&ud.Income, &ud.Outcome, &ud.Difference, &ud.Flag)
+					if err != nil {
+						log.Fatal(err)
+					}
+									}
+				if err = rows.Err(); err != nil {
+					log.Fatal(err)
+				}
+				return ud, err
+			}
+	
 
 

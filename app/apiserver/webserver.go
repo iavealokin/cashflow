@@ -91,6 +91,7 @@ func (ws*webserver) handleUserLogin(w http.ResponseWriter, r *http.Request) {
 			
 		}else{
 			operations,err := ws.store.User().GetOperations(user.ID); 
+			dataMoney, err :=ws.store.User().GetUserData(user.ID);
 	if err != nil{
 		ws.error(w, r, http.StatusUnprocessableEntity, err)
 		return
@@ -105,12 +106,20 @@ func (ws*webserver) handleUserLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 type TemplateCustom struct{
-	Username string
-	Uname string
+	Username 	string
+	Uname 		string
+	Income 		string
+	Outcome 	string
+	Difference  string
+	Flag 		int 
 }
  tc:= new(TemplateCustom)
- tc.Username=user.Surname+" " +user.Username
- tc.Uname = string(user.Surname[0])+string(user.Username[0])
+ tc.Username	= user.Surname+" " +user.Username
+ tc.Uname 		= string(user.Surname[0])+string(user.Username[0])
+ tc.Income 		= dataMoney.Income
+ tc.Outcome 	= dataMoney.Outcome
+ tc.Difference  = dataMoney.Difference
+ tc.Flag        = dataMoney.Flag
 
 	//выводим шаблон клиенту в браузер
 	err = tmpl.ExecuteTemplate(w,"operations",struct{Operations, User interface{}}{operations,tc})

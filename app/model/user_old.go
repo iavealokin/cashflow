@@ -17,3 +17,10 @@ type Operation struct {
 	Date 	  string `json:"date"`
 
 }
+
+type UserData struct {
+	Income 		string
+	Outcome 	string
+	Difference  string
+	Flag 		int
+}

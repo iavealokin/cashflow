@@ -3,7 +3,7 @@
 <html>
 
 <head>
-<title>Cashflow.Home</title>
+<title>Главная - Cashflow</title>
 {{template "head"}}
 </head>
  
@@ -72,7 +72,8 @@
 <div>
     
 </div>
-{{template "scripts"}}
+{{template "scripts" .}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
 <script>
 function showAddOperation(){
 	$('#addOper').toggleClass('hidden');
@@ -84,7 +85,7 @@ function showAddOperation(){
 		var comment = $('#comment').val();
 		var direction = $("#direction option:selected").val();
 		var data = `{"amount":"${amount}","comment":"${comment}","direction":"${direction}"}`;
-		var URL = "http://iavealokin.asuscomm.com:8082/addOperation"
+		var URL = "https://srv.iavealokin.ru/addOperation"
 		console.log(data);
 		 $.support.cors = true;
             $.ajax({

@@ -7,5 +7,6 @@ type UserRepository interface {
 	Drop(*model.User) error
 	Update(*model.User) error
 	GetOperations(int) ([]model.Operation, error)
+	GetUserData(int) (*model.UserData, error)
 	UserLogin(string, string) (*model.User, error)
 }

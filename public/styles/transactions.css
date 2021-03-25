@@ -4,6 +4,10 @@
     background-color: greenyellow;
  
 }
+.header{
+    text-align:center;
+    margin-bottom:2%;
+}
 .hidden{
     display:none;
 }
