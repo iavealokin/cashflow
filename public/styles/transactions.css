@@ -1,0 +1,44 @@
+.transaction{
+ 
+    align-content: left;
+    background-color: greenyellow;
+ 
+}
+.hidden{
+    display:none;
+}
+.transaction_row{
+    margin-top:auto;
+    background-color: rgb(254, 254, 231);
+}
+
+.transaction_row:hover{
+    background-color: rgb(248, 249, 247);
+}
+#reportrange{
+    background: #fff;
+    cursor: pointer; 
+    padding: 5px 10px; 
+    border: 1px solid #ccc; 
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.subcolumn{
+    font-size: small;
+    color:gray;
+    text-align: center;
+    padding:5px;
+}
+
+
+
+.content{
+    align-content: flex-start;
+}
+
+.column_transaction{
+    text-align: center;
+    align-content: center;
+    text-align: center;
+}

@@ -1,0 +1,31 @@
+{{define "error"}}
+<!doctype html>
+<html lang="ru" class="h-100">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="/public/styles/bootstrap.min.css">
+      <link rel="stylesheet" href="/public/styles/loginPage.css">
+        <title>Title</title>
+    </head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+          <!-- Tabs Titles -->
+            
+          <!-- Login Form -->
+          <form action="/home" method="post">
+            <input type="text" id="login" class="fadeIn second" name="login" placeholder="login">
+            <input type="password" id="password" class="fadeIn third" name="password" placeholder="password">
+            <input type="submit" class="fadeIn fourth" value="Log In"><br>
+            <a class="underlineHover" href="#" id="Forgot">Forgot Password?</a>
+            <p class="error">{{.}}</p>
+           </form>      
+        </div>
+      </div>
+      <script src="/public/scripts/jquery-3.5.1.min.js"></script>
+      <script src="/public/scripts/popper.min.js"></script>
+      <script src="/public/scripts/bootstrap.min.js" ></script>
+</body>
+</html>
+{{end}}

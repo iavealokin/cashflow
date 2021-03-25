@@ -1,0 +1,107 @@
+{{define "operations"}}
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Cashflow.Home</title>
+{{template "head"}}
+</head>
+ 
+{{template "body" .}}
+<h2 class="header">Операции за день</h2>
+<div class="container">
+    <div class="row">
+        		
+			<table id="editing-example" class="table" data-paging="true" data-filtering="true" data-sorting="true">
+				<thead>
+				<tr>
+					<!--<th data-name="id" data-breakpoints="xs" data-type="number">ID</th>-->
+					<th data-name="Comment" data-breakpoints="xs">Комментарий</th>
+					<th data-name="Direction">Расход/приход</th>
+					<th data-name="Amount">Сумма</th>
+					<!--<th data-name="Birthday" data-breakpoints="xs sm">Дата</th>-->
+				</tr>
+			
+				</thead>
+				<tbody>
+					{{range .Operations}}
+					<tr id='tr{{.ID}}'>
+						<td name ='Comment'>{{.Comment}}</td>
+						<!--<td >{{.ID}}</td>-->
+						<td name='Direction'>{{.Direction}}</td>
+						{{if eq .Comment "Итого"}}
+						<td name='Amount'><strong>{{.Amount}}</strong></td>
+						{{else }}
+						<td name='Amount'>{{.Amount}}</td>
+						{{end}}
+						<!--<td name ='Birthday'>{{.Date}}</td>-->
+					</tr>
+			{{end}}  
+				</tbody>
+			</table>
+			<!-- Modal -->
+			<div class="modal fade" id="editor-modal" tabindex="-1" role="dialog" aria-labelledby="editor-title">
+				<style scoped>
+					/* provides a red astrix to denote required fields */
+					.form-group.required .control-label:after {
+						content:"*";
+						color:red;
+						margin-left: 4px;
+					}
+				</style>
+			</div>
+
+	
+</div>
+<button type="button" class="btn btn-info" onclick="showAddOperation()">Добавить операцию</button>
+<div id="addOper" class="hidden">
+<input type="number"  class="form-control" style="margin:1% 0%;"  id="sum" placeholder="Сумма"step="0.01">
+<input id="comment"  style="margin:1% 0%;"  class="form-control" placeholder="Комментарий"/>
+<div >
+	<label for="direction">Направление</label>
+	<select class="form-control" id="direction">
+	<option value="1">Доход</option>
+	<option value="2" selected>Расход</option>
+	</select>
+	</div>
+<button type="button" class="btn btn-primary"  onclick="sendData();">Добавить операцию</button>
+</div>
+
+
+</div>
+<div>
+    
+</div>
+{{template "scripts"}}
+<script>
+function showAddOperation(){
+	$('#addOper').toggleClass('hidden');
+}
+
+
+	function sendData(){
+		var amount = $('#sum').val();
+		var comment = $('#comment').val();
+		var direction = $("#direction option:selected").val();
+		var data = `{"amount":"${amount}","comment":"${comment}","direction":"${direction}"}`;
+		var URL = "http://iavealokin.asuscomm.com:8082/addOperation"
+		console.log(data);
+		 $.support.cors = true;
+            $.ajax({
+                contentType: false,
+                processData: false,
+                crossDomain: true,
+                url: URL,
+                type: 'POST',
+				data:data,
+                success: function (response) {
+                   location.reload();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert('try again');
+                }
+            });
+	}
+
+</script>
+{{end}}
