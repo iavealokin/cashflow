@@ -125,16 +125,18 @@ func (r *UserRepository) Update(u *model.User) (error){
 	//Get users list
 	func (r *UserRepository) GetOperations(userid int) ([] model.Operation, error){
 		
-		sqlStatement := `select coalesce(to_char(operation_id,'99999999'),' '),coalesce(amount,0),
-		
-		case when coalesce(to_char(direction,'99'),' ')='2' then 'Расход' else 'Доход' end direction
-		,coalesce(operation_comment,' '), 
-		coalesce(to_char(operation_date, 'YYYY-MM-DD HH24:MI:SS'),' ') as operation_date
+		sqlStatement := `select 
+		coalesce(to_char(operation_id,'99999999'),' ') oper_id
+		, coalesce(amount,0) amount
+		, case when trim(coalesce(to_char(direction,'99'),' '))='2' then 'Расход' else 'Доход' end direction
+		, coalesce(operation_comment,' ')
+		, coalesce(to_char(operation_date, 'YYYY-MM-DD HH24:MI:SS'),' ') as operation_date
 		from operations where cast(operation_date as date)=cast(current_timestamp as date)
 		and user_id=$1
 		union all
 		select '',coalesce(sum(amount),0),' ', 'Итого',''
 		from operations where cast(operation_date as date)=cast(current_timestamp as date); `
+		//and user_id=$1
 		var trns [] model.Operation
 		rows,err := r.store.db.Query(sqlStatement,userid)
 			if err != nil {
