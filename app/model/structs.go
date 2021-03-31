@@ -44,5 +44,5 @@ type UserData struct {
 	Difference  string
 	Flag 		int
     Actives		[] UserActive
-    Passives	UserPassive
+    Passives	[] UserPassive
 }

@@ -184,15 +184,7 @@ from
 			where user_id=$1 and date_trunc('month',operation_date)=date_trunc('month',current_timestamp) and direction=2) outcome
 			from operations where user_id=$1 and date_trunc('month',operation_date)=date_trunc('month',current_timestamp) and direction=1
 			)t;`
-			sqlStatementActives := `select 
-id                 
- ,  passive_name     
- ,  cost           
- ,  amount        
- ,  result         
- ,  percent         
- ,  user_id 
-from passives where user_id=$1;`
+
 			rows,err := r.store.db.Query(sqlStatement,userid)
 				if err != nil {
 					log.Fatal(err)
@@ -208,24 +200,76 @@ from passives where user_id=$1;`
 				if err = rows.Err(); err != nil {
 					log.Fatal(err)
 				}
-				var actives []model.UserActive
-				rows,err = r.store.db.Query(sqlStatementActives,userid)
-				if err != nil {
-					log.Fatal(err)
-				}
-				for rows.Next() {
-					//ud := new(model.UserData)
-					err := rows.Scan(&ud.Actives.ID, &ud.Actives.Name, &ud.Actives.Cost, &ud.Actives.Amount,&ud.Actives.Result,&ud.Actives.Percent,&ud.Actives.UserID)
-					if err != nil {
-						log.Fatal(err)
-					}
-									}
-				if err = rows.Err(); err != nil {
-					log.Fatal(err)
-				}
+
+				actives := GetActives(userid,r)
+				passives := GetPassives(userid,r)
+
+
+				ud.Actives=actives
+				ud.Passives=passives
 				fmt.Println(ud)
 				return ud, err
 			}
 	
 
 
+func GetActives(userid int, r *UserRepository) []model.UserActive{
+		sqlStatementActives := `select 
+id                 
+ ,  active_name     
+ ,  cost           
+ ,  amount        
+ ,  result         
+ ,  percent         
+ ,  user_id 
+from actives where user_id=$1;`
+	var actives []model.UserActive
+				rows,err := r.store.db.Query(sqlStatementActives,userid)
+				if err != nil {
+					log.Fatal(err)
+				}
+				for rows.Next() {
+					active := new(model.UserActive)
+					err := rows.Scan(&active.ID, &active.Name, &active.Cost, &active.Amount,&active.Result,&active.Percent,&active.UserID)
+					if err != nil {
+						log.Fatal(err)
+					}
+					activearr := model.UserActive{ID: active.ID, Name: active.Name, Cost: active.Cost, Amount: active.Amount,Result: active.Result,Percent:active.Percent,UserID: active.UserID}
+					actives =append(actives,activearr)
+									}
+				if err = rows.Err(); err != nil {
+					log.Fatal(err)
+				}
+				return actives
+}
+
+
+func GetPassives(userid int, r *UserRepository) []model.UserPassive{
+		sqlStatementActives := `select 
+id                 
+ ,  passive_name     
+ ,  cost           
+ ,  amount        
+ ,  result         
+ ,  percent         
+ ,  user_id 
+from passives where user_id=$1;`
+	var passives []model.UserPassive
+				rows,err := r.store.db.Query(sqlStatementActives,userid)
+				if err != nil {
+					log.Fatal(err)
+				}
+				for rows.Next() {
+					passive := new(model.UserPassive)
+					err := rows.Scan(&passive.ID, &passive.Name, &passive.Cost, &passive.Amount,&passive.Result,&passive.Percent,&passive.UserID)
+					if err != nil {
+						log.Fatal(err)
+					}
+					passivearr := model.UserPassive{ID: passive.ID, Name: passive.Name, Cost: passive.Cost, Amount: passive.Amount,Result: passive.Result,Percent:passive.Percent,UserID: passive.UserID}
+					passives =append(passives,passivearr)
+									}
+				if err = rows.Err(); err != nil {
+					log.Fatal(err)
+				}
+				return passives
+}
