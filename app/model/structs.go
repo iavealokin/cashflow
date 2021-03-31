@@ -1,0 +1,48 @@
+package model
+//User struct ...
+type User struct {
+	ID       int    `json:"userid"`
+	Login    string `json:"login"`
+	Username string `json:"username"`
+	Surname  string `json:"surname"`
+	Birthday string `json:"birthday"`
+	Password string `json:"password"`
+}
+type Operation struct { 
+	ID        string    `json:"operationid"`
+	Amount    string `json:"amount"`
+	Direction string `json:"direction"`
+	Comment   string `json:"comment"`
+	Date 	  string `json:"date"`
+
+}
+
+type UserActives struct{
+	ID              int
+ 	Name    		string
+ 	Cost            string
+ 	Amount          int
+ 	Result          string
+ 	Percent         string
+	UserID	        int
+}
+type UserPassives struct{
+	ID              int
+ 	Name    		string
+ 	Cost            string
+ 	Amount          int
+ 	Result          string
+ 	Percent         string
+	UserID	        int
+}
+
+type UserData struct {
+    Username 	string
+	Uname 		string
+	Income 		string
+	Outcome 	string
+	Difference  string
+	Flag 		int
+    Actives		UserActives
+    Passives	UserPassives
+}

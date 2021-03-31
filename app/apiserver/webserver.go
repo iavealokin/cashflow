@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/iavealokin/cashflow/app/store"
-	"github.com/iavealokin/cashflow/app/store"
+	"github.com/iavealokin/cashflow/app/model"
 	"github.com/sirupsen/logrus"
 )
 
