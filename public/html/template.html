@@ -27,7 +27,8 @@
 						<td align='right'>&sum; {{.User.Income}}</td>
 					</tr>
            </thead>
-           <tbody id="profitb"><tr><td>Зарплата</td> <td align='right'> 66810.00 </td></tr>
+           <tbody id="profitb">
+           <tr><td>Зарплата</td> <td align='right'> 66810.00 </td></tr>
 					<tr><td>Инвестции</td> <td align='right' > 16983.50 </td></tr></tbody>
 
 				</table>
@@ -58,6 +59,12 @@
 					</tr>
            </thead>
            <tbody id="activesb">
+           {{range .User.Actives}}
+           <tr>
+               <td>{{.Name}}</td>
+               <td>{{.Cost}}</td>
+           </tr>
+           {{end}}
            </tbody>
 
 				</table>

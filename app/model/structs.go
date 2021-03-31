@@ -27,13 +27,13 @@ type UserActive struct{
 	UserID	        string
 }
 type UserPassive struct{
-	ID              int
+	ID              string
  	Name    		string
  	Cost            string
- 	Amount          int
+ 	Amount          string
  	Result          string
  	Percent         string
-	UserID	        int
+	UserID	        string
 }
 
 type UserData struct {
