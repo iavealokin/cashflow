@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
-
+	"fmt"
 	"github.com/iavealokin/cashflow/app/model"
 )
 
@@ -182,9 +182,17 @@ from
 			(
 			select sum(amount) income,(select sum(amount) from operations 
 			where user_id=$1 and date_trunc('month',operation_date)=date_trunc('month',current_timestamp) and direction=2) outcome
-			from operations where user_id=1 and date_trunc('month',operation_date)=date_trunc('month',current_timestamp) and direction=1
+			from operations where user_id=$1 and date_trunc('month',operation_date)=date_trunc('month',current_timestamp) and direction=1
 			)t;`
-			
+			sqlStatementActives := `select 
+id                 
+ ,  passive_name     
+ ,  cost           
+ ,  amount        
+ ,  result         
+ ,  percent         
+ ,  user_id 
+from passives where user_id=$1;`
 			rows,err := r.store.db.Query(sqlStatement,userid)
 				if err != nil {
 					log.Fatal(err)
@@ -200,6 +208,22 @@ from
 				if err = rows.Err(); err != nil {
 					log.Fatal(err)
 				}
+				var actives []model.UserActive
+				rows,err = r.store.db.Query(sqlStatementActives,userid)
+				if err != nil {
+					log.Fatal(err)
+				}
+				for rows.Next() {
+					//ud := new(model.UserData)
+					err := rows.Scan(&ud.Actives.ID, &ud.Actives.Name, &ud.Actives.Cost, &ud.Actives.Amount,&ud.Actives.Result,&ud.Actives.Percent,&ud.Actives.UserID)
+					if err != nil {
+						log.Fatal(err)
+					}
+									}
+				if err = rows.Err(); err != nil {
+					log.Fatal(err)
+				}
+				fmt.Println(ud)
 				return ud, err
 			}
 	

@@ -17,16 +17,16 @@ type Operation struct {
 
 }
 
-type UserActives struct{
-	ID              int
+type UserActive struct{
+	ID              string
  	Name    		string
  	Cost            string
- 	Amount          int
+ 	Amount          string
  	Result          string
  	Percent         string
-	UserID	        int
+	UserID	        string
 }
-type UserPassives struct{
+type UserPassive struct{
 	ID              int
  	Name    		string
  	Cost            string
@@ -43,6 +43,6 @@ type UserData struct {
 	Outcome 	string
 	Difference  string
 	Flag 		int
-    Actives		UserActives
-    Passives	UserPassives
+    Actives		[] UserActive
+    Passives	UserPassive
 }
