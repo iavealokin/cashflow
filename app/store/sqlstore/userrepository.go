@@ -127,15 +127,33 @@ func (r *UserRepository) Update(u *model.User) (error){
 		
 		sqlStatement := `select 
 		coalesce(to_char(operation_id,'99999999'),' ') oper_id
-		, coalesce(amount,0) amount
+		, to_char(coalesce(amount,0),'9999999.99') amount
 		, case when trim(coalesce(to_char(direction,'99'),' '))='2' then 'Расход' else 'Доход' end direction
 		, coalesce(operation_comment,' ')
 		, coalesce(to_char(operation_date, 'YYYY-MM-DD HH24:MI:SS'),' ') as operation_date
 		from operations where cast(operation_date as date)=cast(current_timestamp as date)
 		and user_id=$1
 		union all
-		select '',coalesce(sum(amount),0),' ', 'Итого',''
-		from operations where cast(operation_date as date)=cast(current_timestamp as date); `
+		select '',
+case when plus>minus then to_char(plus- minus,'999999999.99')
+when plus<minus then '-'||to_char(minus-plus,'99999999999.99')
+end
+,case when plus =0 and minus =0
+then '0.00'
+when plus = 0 and minus>0
+then '0.00/'||to_char(minus,'999999999.99')
+else to_char(plus,'99999999.99')||'/'||to_char(coalesce(minus,0),'999999999.99')
+end
+, 'Итого',''
+		from
+		(
+select coalesce(sum(amount),0) plus,(select coalesce(sum(amount),0)
+from operations
+where cast(operation_date as date)=cast(current_timestamp as date) and direction=2 and user_id=$1)minus
+from
+		operations
+		where cast(operation_date as date)=cast(current_timestamp as date) and direction=1 and user_id=$1
+		)t;`
 		var trns [] model.Operation
 		rows,err := r.store.db.Query(sqlStatement,userid)
 			if err != nil {

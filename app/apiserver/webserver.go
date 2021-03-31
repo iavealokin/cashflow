@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/iavealokin/cashflow/app/store"
+	"github.com/iavealokin/cashflow/app/store"
 	"github.com/sirupsen/logrus"
 )
 
@@ -91,7 +92,7 @@ func (ws*webserver) handleUserLogin(w http.ResponseWriter, r *http.Request) {
 			
 		}else{
 			operations,err := ws.store.User().GetOperations(user.ID); 
-			dataMoney, err :=ws.store.User().GetUserData(user.ID);
+			usrData, err :=ws.store.User().GetUserData(user.ID);
 	if err != nil{
 		ws.error(w, r, http.StatusUnprocessableEntity, err)
 		return
@@ -113,13 +114,14 @@ type TemplateCustom struct{
 	Difference  string
 	Flag 		int 
 }
- tc:= new(TemplateCustom)
+ //tc:= new(TemplateCustom)
+ tc := new(model.UserData)
  tc.Username	= user.Surname+" " +user.Username
  tc.Uname 		= string(user.Surname[0])+string(user.Username[0])
- tc.Income 		= dataMoney.Income
- tc.Outcome 	= dataMoney.Outcome
- tc.Difference  = dataMoney.Difference
- tc.Flag        = dataMoney.Flag
+ tc.Income 		= usrData.Income
+ tc.Outcome 	= usrData.Outcome
+ tc.Difference  = usrData.Difference
+ tc.Flag        = usrData.Flag
 
 	//выводим шаблон клиенту в браузер
 	err = tmpl.ExecuteTemplate(w,"operations",struct{Operations, User interface{}}{operations,tc})

@@ -9,15 +9,18 @@
  
 {{template "body" .}}
 <h2 class="header">Операции за день</h2>
+
+
+
 <div class="container">
     <div class="row">
-        		
+
 			<table id="editing-example" class="table" data-paging="true" data-filtering="true" data-sorting="true">
 				<thead>
 				<tr>
 					<!--<th data-name="id" data-breakpoints="xs" data-type="number">ID</th>-->
 					<th data-name="Comment" data-breakpoints="xs">Комментарий</th>
-					<th data-name="Direction">Расход/приход</th>
+					<th data-name="Direction">Приход/Расход</th>
 					<th data-name="Amount">Сумма</th>
 					<!--<th data-name="Birthday" data-breakpoints="xs sm">Дата</th>-->
 				</tr>
@@ -72,12 +75,14 @@
 <div>
     
 </div>
+
 {{template "scripts" .}}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
 <script>
 function showAddOperation(){
 	$('#addOper').toggleClass('hidden');
 }
+
 
 
 	function sendData(){

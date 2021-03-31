@@ -18,7 +18,70 @@
          <h3>{{.User.Username}}</h3>
          <strong>{{.User.Uname}}</strong>
       </div>
-      <ul class="list-unstyled components">
+      <div id="profit" onclick="tablesShow(this.id)">
+		<table id="profitt" class="table table-striped">
+           <thead class="headerbar">
+           	<tr>
+						<td class="green">Доходы</td>
+
+						<td align='right'>&sum; {{.User.Income}}</td>
+					</tr>
+           </thead>
+           <tbody id="profitb"><tr><td>Зарплата</td> <td align='right'> 66810.00 </td></tr>
+					<tr><td>Инвестции</td> <td align='right' > 16983.50 </td></tr></tbody>
+
+				</table>
+	</div>
+         <div id="expense" onclick="tablesShow(this.id)">
+		<table id="expenset" class="table table-striped">
+           <thead class="headerbar">
+           	<tr>
+						<td class="red">Расходы</td>
+
+						<td align='right'>&sum; {{.User.Outcome}}</td>
+					</tr>
+           </thead>
+           <tbody id="expenseb">
+           <tr><td>Зарплата</td> <td align='right'> 66810.00 </td></tr>
+					<tr><td>Инвестции</td> <td align='right' > 16983.50 </td></tr>
+           </tbody>
+
+				</table>
+	</div>
+        <div id="actives" onclick="tablesShow(this.id)">
+		<table id="activest" class="table table-striped">
+           <thead class="headerbar">
+           	<tr>
+						<td class="green">Активы</td>
+
+						<td align='right'>&sum;0</td>
+					</tr>
+           </thead>
+           <tbody id="activesb">
+           </tbody>
+
+				</table>
+	</div>
+
+              <div id="passives" onclick="tablesShow(this.id)">
+		<table id="passivest" class="table table-striped">
+           <thead class="headerbar">
+           	<tr>
+						<td class="red">Пассивы</td>
+
+						<td align='right'>&sum;3 023 000.00</td>
+					</tr>
+           </thead>
+           <tbody id="passivesb">
+                <tr><td>Ипотека</td>   <td align='right'> 2 400 000.00 </td></tr>
+                <tr><td>Кредит</td>    <td align='right' > 610 000.00 </td></tr>
+                <tr><td>Рассрочка</td> <td align='right' > 13 000.00 </td></tr>
+           </tbody>
+
+				</table>
+	</div>
+
+    <!--  <ul class="list-unstyled components">
          <li id="home" class="active">
             <a href="/home"  >
             <i class="fas fa-home"></i>
@@ -48,19 +111,19 @@
                </li>
             </ul>
          </li>
-      </ul>
+      </ul>-->
    </nav>
    <div id="content">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
          <div class="container-fluid">
-            <button type="button" id="sidebarCollapse" class="btn btn-info">
+         <!--   <button type="button" id="sidebarCollapse" class="btn btn-info">
             <i class="fas fa-align-left"></i>
             <span>Скрыть</span>
             
             </button>
             <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fas fa-align-justify"></i>
-            </button>
+            </button> -->
             <span style="color:green;"><strong>{{.User.Income}}</strong></span>
             <span style="color:red;"><strong>{{.User.Outcome}}</strong></span>
             {{if eq .User.Flag 0}}
@@ -99,6 +162,9 @@
               $('#sidebarCollapse span').text('Показать');  
           }
       })
+      function tablesShow(id){
+		$(`#${id}b`).toggleClass('hidden');
+}
    </script>
    {{end}}
 </body>

@@ -19,6 +19,8 @@ type Operation struct {
 }
 
 type UserData struct {
+    Username 	string
+	Uname 		string
 	Income 		string
 	Outcome 	string
 	Difference  string
