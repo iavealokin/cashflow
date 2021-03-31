@@ -122,7 +122,8 @@ type TemplateCustom struct{
  tc.Outcome 	= usrData.Outcome
  tc.Difference  = usrData.Difference
  tc.Flag        = usrData.Flag
-
+ tc.Actives 	= usrData.Actives
+ tc.Passives	= usrData.Passives
 	//выводим шаблон клиенту в браузер
 	err = tmpl.ExecuteTemplate(w,"operations",struct{Operations, User interface{}}{operations,tc})
 	if err != nil {

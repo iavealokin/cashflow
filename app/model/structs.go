@@ -25,6 +25,7 @@ type UserActive struct{
  	Result          string
  	Percent         string
 	UserID	        string
+	Sum				string
 }
 type UserPassive struct{
 	ID              string
@@ -34,6 +35,7 @@ type UserPassive struct{
  	Result          string
  	Percent         string
 	UserID	        string
+	Sum				string
 }
 
 type UserData struct {

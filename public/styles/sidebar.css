@@ -53,16 +53,9 @@ i,
 span {
     display: inline-block;
 }
-
-/* ---------------------------------------------------
-    SIDEBAR STYLE
------------------------------------------------------ */
-
-.wrapper {
-    display: flex;
-    align-items: stretch;
-}
-
+/*----------------------------------------------------
+    CUSTOM STYLES
+------------------------------------------------------ */
 .headerbar{
     min-height: 20px;
 		height: 50px;
@@ -81,6 +74,19 @@ span {
 .sidebartable{
           background: #D3D3D3;
     }
+.right{
+    text-align:right;
+}
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+.wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+
 #sidebar {
     min-width: 30%;
     max-width: 30%;

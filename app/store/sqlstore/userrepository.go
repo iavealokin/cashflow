@@ -207,7 +207,6 @@ from
 
 				ud.Actives=actives
 				ud.Passives=passives
-				fmt.Println(ud)
 				return ud, err
 			}
 	
@@ -228,6 +227,7 @@ from actives where user_id=$1;`
 				if err != nil {
 					log.Fatal(err)
 				}
+				defer rows.Close()
 				for rows.Next() {
 					active := new(model.UserActive)
 					err := rows.Scan(&active.ID, &active.Name, &active.Cost, &active.Amount,&active.Result,&active.Percent,&active.UserID)
@@ -245,7 +245,7 @@ from actives where user_id=$1;`
 
 
 func GetPassives(userid int, r *UserRepository) []model.UserPassive{
-		sqlStatementActives := `select 
+		sqlStatementPassives := `select 
 id                 
  ,  passive_name     
  ,  cost           
@@ -255,10 +255,11 @@ id
  ,  user_id 
 from passives where user_id=$1;`
 	var passives []model.UserPassive
-				rows,err := r.store.db.Query(sqlStatementActives,userid)
+				rows,err := r.store.db.Query(sqlStatementPassives,userid)
 				if err != nil {
 					log.Fatal(err)
 				}
+				defer rows.Close()
 				for rows.Next() {
 					passive := new(model.UserPassive)
 					err := rows.Scan(&passive.ID, &passive.Name, &passive.Cost, &passive.Amount,&passive.Result,&passive.Percent,&passive.UserID)
@@ -271,5 +272,22 @@ from passives where user_id=$1;`
 				if err = rows.Err(); err != nil {
 					log.Fatal(err)
 				}
+			rows,err = r.store.db.Query("select to_char(sum(result),'99999999999.99') from passives where user_id=$1",userid)
+				if err != nil {
+					log.Fatal(err)
+				}
+				psv := new(model.UserPassive)
+				for rows.Next() {
+
+					err := rows.Scan(&psv.Sum)
+					if err != nil {
+						log.Fatal(err)
+					}
+					}
+				if err = rows.Err(); err != nil {
+					log.Fatal(err)
+				}
+				passives[0].Sum=psv.Sum
+				fmt.Println(passives)
 				return passives
 }

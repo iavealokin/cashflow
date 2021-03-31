@@ -24,12 +24,12 @@
            	<tr>
 						<td class="green">Доходы</td>
 
-						<td align='right'>&sum; {{.User.Income}}</td>
+						<td class="right">&sum; {{.User.Income}}</td>
 					</tr>
            </thead>
            <tbody id="profitb">
-           <tr><td>Зарплата</td> <td align='right'> 66810.00 </td></tr>
-					<tr><td>Инвестции</td> <td align='right' > 16983.50 </td></tr></tbody>
+           <tr><td>Зарплата</td> <td class="right"> 66810.00 </td></tr>
+					<tr><td>Инвестции</td> <td class="right" > 16983.50 </td></tr></tbody>
 
 				</table>
 	</div>
@@ -39,12 +39,12 @@
            	<tr>
 						<td class="red">Расходы</td>
 
-						<td align='right'>&sum; {{.User.Outcome}}</td>
+						<td class="right">&sum; {{.User.Outcome}}</td>
 					</tr>
            </thead>
            <tbody id="expenseb">
-           <tr><td>Зарплата</td> <td align='right'> 66810.00 </td></tr>
-					<tr><td>Инвестции</td> <td align='right' > 16983.50 </td></tr>
+           <tr><td>Зарплата</td> <td class="right"> 66810.00 </td></tr>
+					<tr><td>Инвестции</td> <td class="right"> 16983.50 </td></tr>
            </tbody>
 
 				</table>
@@ -55,14 +55,14 @@
            	<tr>
 						<td class="green">Активы</td>
 
-						<td align='right'>&sum;0</td>
+						<td class="right">&sum;0</td>
 					</tr>
            </thead>
            <tbody id="activesb">
            {{range .User.Actives}}
            <tr>
                <td>{{.Name}}</td>
-               <td>{{.Cost}}</td>
+               <td class="right">{{.Cost}}</td>
            </tr>
            {{end}}
            </tbody>
@@ -76,13 +76,16 @@
            	<tr>
 						<td class="red">Пассивы</td>
 
-						<td align='right'>&sum;3 023 000.00</td>
+						<td class="right">&sum;3 023 000.00</td>
 					</tr>
            </thead>
            <tbody id="passivesb">
-                <tr><td>Ипотека</td>   <td align='right'> 2 400 000.00 </td></tr>
-                <tr><td>Кредит</td>    <td align='right' > 610 000.00 </td></tr>
-                <tr><td>Рассрочка</td> <td align='right' > 13 000.00 </td></tr>
+                {{range .User.Passives}}
+           <tr>
+               <td>{{.Name}}</td>
+               <td class="right">{{.Cost}}</td>
+           </tr>
+           {{end}}
            </tbody>
 
 				</table>
