@@ -45,12 +45,13 @@ func (r *UserRepository) Create(o *model.Operation) (error) {
 
 	return r.store.db.QueryRow(
 		"INSERT INTO operations " +
-			"(billing_id,user_id,amount,direction,operation_comment,operation_date) values($1,$2,$3,$4,$5,current_timestamp) RETURNING operation_id",
+			"(billing_id,user_id,amount,direction,operation_comment,operation_date,category_id) values($1,$2,$3,$4,$5,current_timestamp,$6) RETURNING operation_id",
 	"1",
 	"1",
   	&o.Amount,
    	&o.Direction,
    	&o.Comment,
+   	&o.Category,
 	).Scan(&o.ID)
 }
 
@@ -204,8 +205,8 @@ from
 
 				actives := GetActives(userid,r)
 				passives := GetPassives(userid,r)
-
-
+				categories :=GetCategories(r)
+				ud.Categories =categories
 				ud.Actives=actives
 				ud.Passives=passives
 				return ud, err
@@ -261,8 +262,30 @@ from actives where user_id=$1;`
 				actives[0].Sum=acv.Sum
 				return actives
 }
-func GetCategories(userid int, r *UserRepository) []model.Category {
-
+func GetCategories(r *UserRepository) []model.Category {
+sqlStatementPassives := `select 
+id                 
+ ,  category_name
+from operations_category;`
+	var categories []model.Category
+				rows,err := r.store.db.Query(sqlStatementPassives)
+				if err != nil {
+					log.Fatal(err)
+				}
+				defer rows.Close()
+				for rows.Next() {
+					category := new(model.Category)
+					err := rows.Scan(&category.ID, &category.Name)
+					if err != nil {
+						log.Fatal(err)
+					}
+					categoryarr := model.Category{ID: category.ID, Name: category.Name}
+					categories =append(categories,categoryarr)
+									}
+				if err = rows.Err(); err != nil {
+					log.Fatal(err)
+				}
+				return categories
 }
 
 func GetPassives(userid int, r *UserRepository) []model.UserPassive{

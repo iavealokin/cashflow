@@ -14,6 +14,7 @@ type Operation struct {
 	Direction string `json:"direction"`
 	Comment   string `json:"comment"`
 	Date 	  string `json:"date"`
+	Category  string `json:"category"`
 
 }
 type Category struct{
@@ -63,4 +64,6 @@ type UserData struct {
     Actives		[] UserActive
     Passives	[] UserPassive
     Categories  [] Category
+    Profits 	[] Profit
+    Expenses 	[] Expense
 }

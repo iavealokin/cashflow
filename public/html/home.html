@@ -67,6 +67,14 @@
 	<option value="2" selected>Расход</option>
 	</select>
 	</div>
+	<div >
+	<label for="category">Категория расхода</label>
+	<select class="form-control" id="category">
+		{{range .User.Categories}}
+	<option value="{{.ID}}">{{.Name}}</option>
+		{{end}}
+	</select>
+	</div>
 <button type="button" class="btn btn-primary"  onclick="sendData();">Добавить операцию</button>
 </div>
 
@@ -89,7 +97,8 @@ function showAddOperation(){
 		var amount = $('#sum').val();
 		var comment = $('#comment').val();
 		var direction = $("#direction option:selected").val();
-		var data = `{"amount":"${amount}","comment":"${comment}","direction":"${direction}"}`;
+		var category =$("#category option:selected").val();
+		var data = `{"amount":"${amount}","comment":"${comment}","direction":"${direction}", "category":"${category}"}`;
 		var URL = "https://srv.iavealokin.ru/addOperation"
 		console.log(data);
 		 $.support.cors = true;
