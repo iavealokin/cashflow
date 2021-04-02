@@ -261,7 +261,9 @@ from actives where user_id=$1;`
 				actives[0].Sum=acv.Sum
 				return actives
 }
+func GetCategories(userid int, r *UserRepository) []model.Category {
 
+}
 
 func GetPassives(userid int, r *UserRepository) []model.UserPassive{
 		sqlStatementPassives := `select 

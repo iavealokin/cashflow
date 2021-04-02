@@ -26,6 +26,12 @@ type Profit struct{
 	Comment		 string
 	Cost 		 string
 }
+type Expense struct{
+	ID 			 string
+	CategoryName string
+	Comment		 string
+	Cost 		 string
+}
 type UserActive struct{
 	ID              string
  	Name    		string
@@ -56,4 +62,5 @@ type UserData struct {
 	Flag 		int
     Actives		[] UserActive
     Passives	[] UserPassive
+    Categories  [] Category
 }
