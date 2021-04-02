@@ -16,7 +16,16 @@ type Operation struct {
 	Date 	  string `json:"date"`
 
 }
-
+type Category struct{
+	ID 	 string
+	Name string
+}
+type Profit struct{
+	ID 			 string
+	CategoryName string
+	Comment		 string
+	Cost 		 string
+}
 type UserActive struct{
 	ID              string
  	Name    		string

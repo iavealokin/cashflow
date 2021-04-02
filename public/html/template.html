@@ -54,8 +54,11 @@
            <thead class="headerbar">
            	<tr>
 						<td class="green">Активы</td>
-
-						<td class="right">&sum;0</td>
+{{range .User.Actives}}
+                {{if .Sum}}
+						<td class="right">&sum;{{.Sum}}</td>
+                {{end}}
+                {{end}}
 					</tr>
            </thead>
            <tbody id="activesb">
@@ -75,8 +78,11 @@
            <thead class="headerbar">
            	<tr>
 						<td class="red">Пассивы</td>
-
-						<td class="right">&sum;3 023 000.00</td>
+{{range .User.Passives}}
+                {{if .Sum}}
+						<td class="right">&sum;{{.Sum}}</td>
+                {{end}}
+                {{end}}
 					</tr>
            </thead>
            <tbody id="passivesb">

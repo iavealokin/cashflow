@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
-	"fmt"
+	//"fmt"
 	"github.com/iavealokin/cashflow/app/model"
 )
 
@@ -127,7 +127,7 @@ func (r *UserRepository) Update(u *model.User) (error){
 		
 		sqlStatement := `select 
 		coalesce(to_char(operation_id,'99999999'),' ') oper_id
-		, to_char(coalesce(amount,0),'9999999.99') amount
+		, coalesce(to_char(amount,'9999999.99'),'0.00') amount
 		, case when trim(coalesce(to_char(direction,'99'),' '))='2' then 'Расход' else 'Доход' end direction
 		, coalesce(operation_comment,' ')
 		, coalesce(to_char(operation_date, 'YYYY-MM-DD HH24:MI:SS'),' ') as operation_date
@@ -137,6 +137,7 @@ func (r *UserRepository) Update(u *model.User) (error){
 		select '',
 case when plus>minus then to_char(plus- minus,'999999999.99')
 when plus<minus then '-'||to_char(minus-plus,'99999999999.99')
+when coalesce(plus,0)=coalesce(minus,0) then '0.00'
 end
 ,case when plus =0 and minus =0
 then '0.00'
@@ -178,9 +179,9 @@ from
 //Get balance, limits,cashflow,etc..
 		func (r *UserRepository) GetUserData(userid int) (*model.UserData, error){
 			ud := new(model.UserData)
-			sqlStatement := `select income,outcome,income-outcome, case when income-outcome>0 then 1 else 0 end flag from
+			sqlStatement := `select coalesce(income,0),coalesce(outcome,0),coalesce(income,0)-coalesce(outcome,0), case when income-outcome>0 then 1 else 0 end flag from
 			(
-			select sum(amount) income,(select sum(amount) from operations 
+			select sum(coalesce(amount,0)) income,(select sum(coalesce(amount,0)) from operations 
 			where user_id=$1 and date_trunc('month',operation_date)=date_trunc('month',current_timestamp) and direction=2) outcome
 			from operations where user_id=$1 and date_trunc('month',operation_date)=date_trunc('month',current_timestamp) and direction=1
 			)t;`
@@ -240,6 +241,24 @@ from actives where user_id=$1;`
 				if err = rows.Err(); err != nil {
 					log.Fatal(err)
 				}
+				rows,err = r.store.db.Query("select to_char(coalesce(sum(result),0.00),'99999999999.99') from actives where user_id=$1",userid)
+				if err != nil {
+					log.Fatal(err)
+				}
+				acv := new(model.UserActive)
+				for rows.Next() {
+
+					err := rows.Scan(&acv.Sum)
+					if err != nil {
+
+						log.Fatal(err)
+					}
+					}
+				if err = rows.Err(); err != nil {
+					log.Fatal(err)
+				}
+
+				actives[0].Sum=acv.Sum
 				return actives
 }
 
@@ -272,7 +291,7 @@ from passives where user_id=$1;`
 				if err = rows.Err(); err != nil {
 					log.Fatal(err)
 				}
-			rows,err = r.store.db.Query("select to_char(sum(result),'99999999999.99') from passives where user_id=$1",userid)
+			rows,err = r.store.db.Query("select to_char(coalesce(sum(result),0.00),'99999999999.99') from passives where user_id=$1",userid)
 				if err != nil {
 					log.Fatal(err)
 				}
@@ -281,6 +300,7 @@ from passives where user_id=$1;`
 
 					err := rows.Scan(&psv.Sum)
 					if err != nil {
+
 						log.Fatal(err)
 					}
 					}
@@ -288,6 +308,5 @@ from passives where user_id=$1;`
 					log.Fatal(err)
 				}
 				passives[0].Sum=psv.Sum
-				fmt.Println(passives)
 				return passives
 }
