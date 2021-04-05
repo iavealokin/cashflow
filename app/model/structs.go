@@ -21,18 +21,6 @@ type Category struct{
 	ID 	 string
 	Name string
 }
-type Profit struct{
-	ID 			 string
-	CategoryName string
-	Comment		 string
-	Cost 		 string
-}
-type Expense struct{
-	ID 			 string
-	CategoryName string
-	Comment		 string
-	Cost 		 string
-}
 type UserActive struct{
 	ID              string
  	Name    		string
@@ -64,6 +52,5 @@ type UserData struct {
     Actives		[] UserActive
     Passives	[] UserPassive
     Categories  [] Category
-    Profits 	[] Profit
-    Expenses 	[] Expense
+    Operations 	[] Operation
 }

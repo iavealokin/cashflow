@@ -206,9 +206,11 @@ from
 				actives := GetActives(userid,r)
 				passives := GetPassives(userid,r)
 				categories :=GetCategories(r)
+				opers :=GetProfits(userid,r)
 				ud.Categories =categories
 				ud.Actives=actives
 				ud.Passives=passives
+				ud.Operations = opers
 				return ud, err
 			}
 	
@@ -286,6 +288,40 @@ from operations_category;`
 					log.Fatal(err)
 				}
 				return categories
+}
+
+
+func GetProfits(userid int, r *UserRepository) []model.Operation{
+			
+	sqlStatement := `select 
+	, op.ID
+	oc.category_name
+	,  coalesce(to_char(sum(amount),'9999999.99'),'0.00') amount
+	,  direction
+	   from operations op
+	   left join operations_category oc on oc.id=op.category_id
+   	   where date_trunc('month',operation_date)=date_trunc('month',current_timestamp)
+	   and user_id=$1
+	   group by oc.category_name,direction;`
+	var trns [] model.Operation
+	rows,err := r.store.db.Query(sqlStatement,userid)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			trn := new(model.Operation)
+			err := rows.Scan(&trn.ID, &trn.Comment, &trn.Amount, &trn.Direction)
+			if err != nil {
+				log.Fatal(err)
+			}
+			trnarr := model.Operation{ID: trn.ID, Comment: trn.Comment, Amount: trn.Amount, Direction: trn.Direction}
+			trns = append(trns, trnarr)
+		}
+		if err = rows.Err(); err != nil {
+			log.Fatal(err)
+		}
+		return trns
 }
 
 func GetPassives(userid int, r *UserRepository) []model.UserPassive{
