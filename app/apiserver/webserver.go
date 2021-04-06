@@ -125,6 +125,7 @@ type TemplateCustom struct{
  tc.Actives 	= usrData.Actives
  tc.Passives	= usrData.Passives
  tc.Categories	= usrData.Categories
+ tc.Operations  = usrData.Operations
 	//выводим шаблон клиенту в браузер
 	err = tmpl.ExecuteTemplate(w,"operations",struct{Operations, User interface{}}{operations,tc})
 	if err != nil {

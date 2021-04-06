@@ -53,4 +53,5 @@ type UserData struct {
     Passives	[] UserPassive
     Categories  [] Category
     Operations 	[] Operation
+    OperationsDetail []Operation
 }

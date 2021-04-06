@@ -84,8 +84,8 @@
     
 </div>
 
+
 {{template "scripts" .}}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
 <script>
 function showAddOperation(){
 	$('#addOper').toggleClass('hidden');
@@ -118,5 +118,8 @@ function showAddOperation(){
             });
 	}
 
+
 </script>
+{{template "customscripts" .}}
+
 {{end}}

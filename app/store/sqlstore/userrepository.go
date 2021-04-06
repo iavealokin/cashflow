@@ -207,10 +207,12 @@ from
 				passives := GetPassives(userid,r)
 				categories :=GetCategories(r)
 				opers :=GetProfits(userid,r)
+				operations:= GetOperations(userid,r)
 				ud.Categories =categories
 				ud.Actives=actives
 				ud.Passives=passives
 				ud.Operations = opers
+				ud.OperationsDetail = operations
 				return ud, err
 			}
 	
@@ -294,8 +296,7 @@ from operations_category;`
 func GetProfits(userid int, r *UserRepository) []model.Operation{
 			
 	sqlStatement := `select 
-	, op.ID
-	oc.category_name
+	coalesce(oc.category_name,'Не распределено')
 	,  coalesce(to_char(sum(amount),'9999999.99'),'0.00') amount
 	,  direction
 	   from operations op
@@ -311,11 +312,11 @@ func GetProfits(userid int, r *UserRepository) []model.Operation{
 		defer rows.Close()
 		for rows.Next() {
 			trn := new(model.Operation)
-			err := rows.Scan(&trn.ID, &trn.Comment, &trn.Amount, &trn.Direction)
+			err := rows.Scan(&trn.Comment, &trn.Amount, &trn.Direction)
 			if err != nil {
 				log.Fatal(err)
 			}
-			trnarr := model.Operation{ID: trn.ID, Comment: trn.Comment, Amount: trn.Amount, Direction: trn.Direction}
+			trnarr := model.Operation{Comment: trn.Comment, Amount: trn.Amount, Direction: trn.Direction}
 			trns = append(trns, trnarr)
 		}
 		if err = rows.Err(); err != nil {
@@ -323,6 +324,38 @@ func GetProfits(userid int, r *UserRepository) []model.Operation{
 		}
 		return trns
 }
+
+func GetOperations(userid int, r *UserRepository) []model.Operation{
+
+	sqlStatement := `select operation_id,amount,direction,operation_date,operation_comment,oc.category_name
+from operations op
+left join operations_category oc on op.category_id=oc.id
+where date_trunc('month',operation_date)=date_trunc('month',current_timestamp) 
+and date_trunc('year',current_timestamp)=date_trunc('year',operation_date)
+and user_id=$1;`
+	var trns [] model.Operation
+	rows,err := r.store.db.Query(sqlStatement,userid)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			trn := new(model.Operation)
+			err := rows.Scan($trn.ID,&trn.Amount, &trn.Direction, &trn.Date, $trn.Comment,$trn.Category)
+			if err != nil {
+				log.Fatal(err)
+			}
+			trnarr := model.Operation{ID: trn.ID, Amount: trn.Amount, Direction: trn.Direction,Date:trn.Date, Comment: trn.Comment, Category:trn.Category}
+			trns = append(trns, trnarr)
+		}
+		if err = rows.Err(); err != nil {
+			log.Fatal(err)
+		}
+		return trns
+}
+
+
+
 
 func GetPassives(userid int, r *UserRepository) []model.UserPassive{
 		sqlStatementPassives := `select 

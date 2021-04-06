@@ -12,6 +12,7 @@
 </head>
 {{define "body"}}
 <body>
+   
    <div class="wrapper">
    <nav id="sidebar">
       <div class="sidebar-header">
@@ -28,8 +29,11 @@
 					</tr>
            </thead>
            <tbody id="profitb">
-           <tr><td>Зарплата</td> <td class="right"> 66810.00 </td></tr>
-					<tr><td>Инвестции</td> <td class="right" > 16983.50 </td></tr></tbody>
+            {{range .User.Operations}}
+              {{ if eq .Direction "1" }}
+           <tr><td>{{.Comment}}</td> <td class="right">{{.Amount}}</td></tr>
+           {{end}}
+           {{end}}
 
 				</table>
 	</div>
@@ -37,14 +41,17 @@
 		<table id="expenset" class="table table-striped">
            <thead class="headerbar">
            	<tr>
-						<td class="red">Расходы</td>
+						<td class="red" onclick="showModal();">Расходы</td>
 
 						<td class="right">&sum; {{.User.Outcome}}</td>
 					</tr>
            </thead>
            <tbody id="expenseb">
-           <tr><td>Зарплата</td> <td class="right"> 66810.00 </td></tr>
-					<tr><td>Инвестции</td> <td class="right"> 16983.50 </td></tr>
+              {{range .User.Operations}}
+              {{ if eq .Direction "2" }}
+           <tr><td>{{.Comment}}</td> <td class="right">{{.Amount}}</td></tr>
+           {{end}}
+           {{end}}
            </tbody>
 
 				</table>
@@ -96,50 +103,11 @@
 
 				</table>
 	</div>
-
-    <!--  <ul class="list-unstyled components">
-         <li id="home" class="active">
-            <a href="/home"  >
-            <i class="fas fa-home"></i>
-            Главная
-            </a>
-         </li>
-         <li id="transactions">
-            <a href="/transactions">
-            <i class="fas fa-briefcase"></i>
-            История
-            </a>
-         </li>
-         <li>
-            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-            <i class="fas fa-copy"></i>
-            Графики
-            </a>
-            <ul class="collapse list-unstyled" id="pageSubmenu">
-               <li>
-                  <a href="#">Доход и расход</a>
-               </li>
-               <li>
-                  <a href="#">Экономия</a>
-               </li>
-               <li>
-                  <a href="#">Ускоренный платёж по кредиту</a>
-               </li>
-            </ul>
-         </li>
-      </ul>-->
    </nav>
+
    <div id="content">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
          <div class="container-fluid">
-         <!--   <button type="button" id="sidebarCollapse" class="btn btn-info">
-            <i class="fas fa-align-left"></i>
-            <span>Скрыть</span>
-            
-            </button>
-            <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fas fa-align-justify"></i>
-            </button> -->
             <span style="color:green;"><strong>{{.User.Income}}</strong></span>
             <span style="color:red;"><strong>{{.User.Outcome}}</strong></span>
             {{if eq .User.Flag 0}}
@@ -149,39 +117,106 @@
             {{end}}
          </div>
       </nav>
+      <div class="modal" tabindex="-1" role="dialog" id="myModal" aria-labelledby="myModal">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title">Modal title</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body">
+               <div id="tab-container">
+                  <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="#tab-1">Доходы 1</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#tab-2">Расходы</a>
+                    </li>                  
+                  </ul>
+                  <div class="tab-content">
+                    <p class="mb-0" id="tab-1">
+                     <table id="editing-example" class="table" data-paging="true" data-filtering="true" data-sorting="true">
+                        <thead>
+                        <tr>
+                           <!--<th data-name="id" data-breakpoints="xs" data-type="number">ID</th>-->
+                           <th data-name="Comment" data-breakpoints="xs">Комментарий</th>
+                           <th data-name="Direction">Приход/Расход</th>
+                           <th data-name="Amount">Сумма</th>
+                           <th data-name="date" data-breakpoints="xs sm">Дата</th>
+                        </tr>
+                     
+                        </thead>
+                        <tbody>
+                           {{range .User.OperationsDetail}}
+                           {{if eq .Direction "2"}}
+                           <tr id='tr{{.ID}}'>
+                              <td name ='Comment'>{{.Comment}}</td>
+                              <!--<td >{{.ID}}</td>-->
+                              <td name='Direction'>{{.Direction}}</td>
+                              {{if eq .Comment "Итого"}}
+                              <td name='Amount'><strong>{{.Amount}}</strong></td>
+                              {{else }}
+                              <td name='Amount'>{{.Amount}}</td>
+                              {{end}}
+                              <td name ='Date'>{{.Date}}</td>-
+                           </tr>
+                     {{end}}  
+                     {{end}}
+                        </tbody>
+                     </table>  
+
+
+                    <p class="mb-0" id="tab-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam non arcu eu mi pulvinar sollicitudin. Curabitur sit amet justo mauris.</p>
+                  </div>
+                  </div>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-primary">Save changes</button>
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+             </div>
+           </div>
+         </div>
+       </div>
       {{end}}
    </div>
+  
+   
    {{define "scripts"}}
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-   <script src="/public/scripts/template.js"></script>
-   <script src="https://code.highcharts.com/highcharts.js"></script>
-   <script src="https://code.highcharts.com/modules/exporting.js"></script>
-   <script src="https://code.highcharts.com/modules/export-data.js"></script>
-   <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-hashchange/1.3/jquery.ba-hashchange.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.easytabs/3.2.0/jquery.easytabs.min.js"></script>
    <script src="/public/scripts/moment.js" ></script>
    <script src="/public/scripts/footable.js" ></script>
+   {{end}}
+
+   {{define "customscripts"}}
    <script type="text/javascript">
-      $(document).ready(function () {
-          $('#sidebarCollapse').on('click', function () {
-              $('#sidebar').toggleClass('active');
-          });
+   $(document).ready(function () {
+       $('#tab-container').easytabs();
+      $('#sidebarCollapse').on('click', function () {
+          $('#sidebar').toggleClass('active');
       });
-      $('#sidebarCollapse').on('click',function () {
-          if($('#sidebar').hasClass('active')){
-          $('#sidebarCollapse span').text('Скрыть');
-          }else{
-              $('#sidebarCollapse span').text('Показать');  
-          }
-      })
-      function tablesShow(id){
-		$(`#${id}b`).toggleClass('hidden');
+  });
+  $('#sidebarCollapse').on('click',function () {
+      if($('#sidebar').hasClass('active')){
+      $('#sidebarCollapse span').text('Скрыть');
+      }else{
+          $('#sidebarCollapse span').text('Показать');  
+      }
+  })
+  function tablesShow(id){
+  $(`#${id}b`).toggleClass('hidden');
 }
-   </script>
+
+function showModal(){
+$('#myModal').modal('show');
+}
+</script>
    {{end}}
 </body>
 </html>
